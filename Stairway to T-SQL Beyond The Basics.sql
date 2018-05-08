@@ -151,3 +151,102 @@
 --Question 3:
 --If you are going to deploy dynamic TSQL code that is contained in a variable, which of these two execution methods is best to use in order to minimize your risk for a SQL Injection attack?
 --sp_executesql
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--Section 72403 scripts
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--Level 1: SQL Server Agent Setup and Overview
+
+--Creating your first Job
+
+--STEPS
+--Click on SQL Server Agent
+--New Job 
+--Enter Job Name 
+--Click OK
+--Insert this bash script on the Command
+
+--BACKUP DATABASE master
+--	TO DISK='C:\Program Files\Microsoft SQL Server\MSSQL10.MSSQLSERVER\MSSQL\Backup\master.bak'
+--	WITH INIT
+
+--It will backup the database
+
+--IE When a job is created, an owner is assigned to the job
+
+--Job Schedules
+--How to start a job schedule
+
+--Click on the Click on SQL Server Agent
+--Click on start job at step.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--Level 2: Job Steps and Subsystems
+
+--Job Steps
+--How to create a job, and the necessary job steps
+
+--Continue from last level.
+--click on the Steps tab to view job steps
+--click New to create a new job step
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--Level 3: Agent Alerts and Operators
+
+
+--Creating an operator
+--Open up SQL Server Management Studio (SSMS) 
+--navigate to the Operators folder under SQL Server Agent
+--Right click on Operators,
+--Select the option for New Operator
+--Enter name, as well as an email address
+--Check Enabled
+--Click OK to save
+
+-- navigate to the SQL Server Agent folder in SSMS 
+-- then to the Alertsfolder  
+--right-click and select New Alert
+--create an alert to notify the DBA of any system-level error(severity 19 or higher) 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--Level 4: Configuring Database Mail
+
+--Enable Database Mail using the Database Mail Configuration Wizard
+ --connect to your local instance of SQL Server with SQL Server Management Studio
+ --then expand the Management folder
+ --right-click on the Database Mail entry
+ --Select the option to Configure Database Mail
+ --database mail configuration wizard will launch
+ --Click Next
+ --You will then be presented the New Profile dialog
+ --Enter a profile name and description, and then click on the Add
+ --Enter the required field with authentication
+
+ -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ --Level 5: Understanding SQL Agent Error Logs
+
+ --Reviewing the SQL Server Agent Error Logs
+ --The SQL Server error logs are located in the \MSSQL\Log directory under the parent directory hosting SQL Server
+ --By default, the service accounts for SQL Server and SQL Server Agent will have read/write privileges to the directory, but you (using a user account) won’t have access
+ --local administrator are granted access to view the log files directly
+
+ -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  --Level 6: Workflow within Jobs - Drilling into Job steps
+
+  --SQL Server Agent Job Step Workflow
+  --create a new job in SSMS.
+  -- Right-click on the Jobs folder under SQL Server Agent
+  -- select New Job. 
+  --On the General page, give the job a name 
+  -- Select the Steps page, 
+  -- then click the New… button to create the first job step. 
+  --The New Job Step dialog appears
+
+  -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ --Level 7: Working with the SQL Server Agent Job Activity Monitor
+
+ --Using the Job Activity Monitor
+ --start SSMS
+ --navigate to the SQL Server Agent node in Object Explorer
+ --Agent Job Activity section displays all SQL Server Agent jobs.
