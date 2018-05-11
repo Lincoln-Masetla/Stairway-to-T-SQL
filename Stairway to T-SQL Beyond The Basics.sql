@@ -250,3 +250,255 @@
  --start SSMS
  --navigate to the SQL Server Agent node in Object Explorer
  --Agent Job Activity section displays all SQL Server Agent jobs.
+
+ ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ --Section 72494 scripts
+ ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ --Level 1 of the Stairway to Integration Services
+
+ --Separation of Duties
+ --Open Business Intelligence Development Studio
+ --create a SSIS project by clicking File-->New-->Project
+ --select Business Intelligence Projects
+ --Select Integration Services Project
+ --Enter project name
+
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ --Level 2 of the Stairway to Integration Services
+
+ --Open the SSIS project from Level 1
+ --From the Control Flow toolbox, drag a Data Flow Task onto the Control Flow canvas.
+ --Right-click the Data Flow Task and click Edit
+ --Drag an OLE DB Source adapter from the Data Flow Task toolbox onto the canvas:
+ --open the Error List, click the View dropdown menu in BIDS (Visual Studio), and then click Error List
+
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ --Level 3 of the Stairway to Integration Services
+
+ --Incremental Load
+ --load the same 19,972 rows of data from Person.Contact into dbo.Contact
+
+--Use AdventureWorks
+--go
+--Select *
+--From dbo.Contact
+
+--You can clean up the dbo.Contact table by adding the following T-SQL script:
+--Delete dbo.Contact
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--Level 4 of the Stairway to Integration Services
+
+--Adding the Update Code
+
+--Use AdventureWorks
+--go
+--Update dbo.Contact
+--Set MiddleName = 'Ray'
+--Where MiddleName Is NULL
+
+--Open BIDS 
+--open the SSIS solution in Level 1. 
+--Click on the Data Flow tab.
+--Double-click the Lookup Transformation to open the Lookup Transformation Editor
+--Click the Columns page
+--Checkboxes next to them and a “check all” checkbox in the grid header
+--drag LkUp_FirstName from the Columns virtual Folder to the right of the Unequal operator in the case Condition expression
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--Level 5 of the Stairway to Integration Services
+
+--Delete Missing Rows
+--Use AdventureWorks
+--go
+--Insert Into dbo.Contact
+--(FirstName, MiddleName, LastName, Email)
+--Values
+--('Andy', 'Ray', 'Leonard', 'andy.leonard@gmail.com')
+
+--Open the Delete Rows Data Flow Task
+--Add an OLE DB Source, open its editor, and configure the following properties:
+--OLE DB Connection Manager: (local).AdventureWorks
+--Data Access Mode: Table or view
+--Name of the table or view: dbo.Contact
+--Open the Lookup Transformation Editor 
+--On the General page
+-- change the Specify how to handle rows with no matching entries
+-- dropdown to Redirect rows to no match output
+
+--Select EmailAddress As Email
+--From Person.Contact
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+--Level 6 of the Stairway to Integration Services
+
+--Adding a Package
+--Open your existing SSIS solution called My_First_SSIS_Project
+--Once open, right-click the “SSIS Packages” virtual folder in Solution Explorer and click “New SSIS Package”
+--When you click “New SSIS Package”, a new package named Package1.
+--After you rename the package and press the Enter key
+--Right-click the Script Task and click “Edit” to open the Script
+--Return to the Script page and click the ReadOnlyVariables property
+--Click the ellipsis to display a list of available Variables
+--Click the “Edit Script” button to open the Visual Studio Tools for Applications script editor
+--Scroll until you see Public Sub Main(). Add this code to the subroutine:
+        --Dim sTaskName As String = Dts.Variables("TaskName").Value.ToString
+
+        --MsgBox(sTaskName & " completed.")
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--Level 7 of the Stairway to Integration Services
+
+--Constraint Evaluation
+--open the My_First_SSIS_Project solution and the Precedence.
+--Connect a precedence constraint from Script Task 1 to Script Task 2
+--Execute the package in the Business Intelligence Development Studio (BIDS) debugger
+--Click the OK button on the message box
+--Right-click the precedence constraint to see configuration options available on the context menu
+--On Completion 
+
+--Public Sub Main()
+--    Dim sTaskName As String = Dts.Variables("TaskName").Value.ToString
+--    Dim iResponse As Integer = MsgBox("Succeed " & _
+
+--        sTaskName & "?", MsgBoxStyle.YesNo, sTaskName)
+
+--    If iResponse = MsgBoxResult.Yes Then
+--        Dts.TaskResult = ScriptResults.Success
+--    Else
+--        Dts.TaskResult = ScriptResults.Failure
+--    End If
+--End Sub
+
+--Click the “Yes” button, the On Completion precedence
+--Retesting On Success
+--Right-click the precedence constraint and set it to Success
+--When prompted to succeed Script Task 1 click the “No” button to cause it to fail
+--On Failure
+--Stop the debugger and right-click the precedence constraint and select “Failure”
+--When the package restarts and the Script Task 1 prompt displays, click the “Yes” button to succeed Script Task 1
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--Level 8 of the Stairway to Integration Services
+
+--About Variables
+--Click the SSIS dropdown menu at the top of the BIDS environment and select Variables
+--Click on the Add Variable button 
+--Click on the Delete Variable button 
+--Click the Test button to validate the expression in the Expression textbox
+--Execute the Precedence.dtsx package in the BIDS debugger by pressing the F5 key or clicking the VCR-style
+--To create a more useful test, open the Script Task 1 Editor and click the ellipsis in the ReadWriteVariables property
+
+--   Public Sub Main()
+--        Dim sTaskName As String = Dts.Variables("TaskName").Value.ToString
+--        Dim iResponse As Integer = _
+--MsgBox("Set MyBool to True?", MsgBoxStyle.YesNo, sTaskName)
+--        If iResponse = MsgBoxResult.Yes Then
+--            Dts.Variables("User::MyBool").Value = True
+--        Else
+--            Dts.Variables("User::MyBool").Value = False
+--        End If
+
+--        Dts.TaskResult = ScriptResults.Success
+--    End Sub
+
+--Close the Script Editor and click the OK button to close the Script Task Editor. Execute the Precedence.dtsx package in the BIDS debugger.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--Level 9 of the Stairway to Integration Services
+--About SSIS Task Errors
+--Open the Precedence.dtsx package. Your Control Flow should appear
+--Right-click Script Task 4 and click Enable
+--Configure the precedence constraints inside Sequence Container 1 connecting Script Tasks 2 and 4 to Script Task 
+--Evaluating the Expression and Constraint means both the expression and the execution status
+--Press F5 to execute the package inside the BIDS debugger
+--If you click the No button, Script Task 4 fails. Then Script Task 3 displays a message box informing you it has completed.
+--Click the Edit Script button to open the “ssisscript – Integration Services Script Task” editor
+--Public Sub Main()
+--        Dim iErrorCode As Integer = _
+--            Convert.ToInt32(Dts.Variables("ErrorCode").Value)
+--        Dim sErrorDescription As String = _
+--            Dts.Variables("ErrorDescription").Value.ToString
+--        Dim sSourceName As String = _
+--            Dts.Variables("SourceName").Value.ToString
+--        Dim sSubComponent As String = _
+--            "Script Task 4 OnError Event Handler"
+--        Dim sMsg As String = "Source: " & sSourceName & vbCrLf & _
+--                             "Error Code: " & iErrorCode.ToString & _
+--                             vbCrLf & _
+--                             "Error Description: " & _
+--                             sErrorDescription
+
+--        MsgBox(sMsg, , sSubComponent)
+
+--        Dts.TaskResult = ScriptResults.Success
+
+--      End Sub
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--Level 10 of the Stairway to Integration Services
+
+--About SSIS Task Events
+--Open the Precedence.dtsx package
+--Script Task 4 and Sequence Container 1
+--To each OnError event handler,Script Task that displays a message box containing the values of the following SSIS OnError event handler variables:
+--System::ErrorCode
+--System::ErrorDescription
+--System::SourceName
+--click the No button to raise an Error event from Script Task 4
+
+--Events and Execution Status
+--licking the SSIS
+--Dropdown menu, and then click Variables
+--Select the Show System Variables
+--System::Propagate variable is a Boolean variable that defaults
+--Click on the Value column and change the default value from True to False
+--Execute the Precedence.dtsx SSIS package in the BIDS debugger
+--Open the .Net script editor by clicking the Edit Script button. Edit the code in Public Sub Main(),
+ --If iErrorCode = 8 Then
+
+--Public Sub Main()
+
+--        Dim sTaskName As String = Dts.Variables("TaskName").Value.ToString
+--        Dim iResponse As Integer
+
+--        iResponse = MsgBox("Succeed " & sTaskName & "?", _
+--                           MsgBoxStyle.YesNo + MsgBoxStyle.Question, _
+--                           sTaskName & " Success Question")
+
+--        If iResponse = vbYes Then
+--            Dts.TaskResult = ScriptResults.Success
+--        Else
+--            'Dts.TaskResult = ScriptResults.Failure
+--            Dts.Events.FireError(-1001, "Script Task 4", _
+--                                 "Script Task 4 failed!", "", 0)
+--        End If
+--    End Sub
+
+-- Click the dropdown on the Connection property and click the “<New connection…>” 
+-- When the File Connection Manager Editor opens, 
+-- Click the Browse button. 
+-- Select File window displays, 
+-- Navigate to the location of the Precedence.dtsx file in your file system
+-- Navigate to the folder containing your SSIS solution (…My_First_SSIS_Project)
+-- Click the OK button to complete creation of the File Connection Manager and return to the Execute Package Task Editor
+-- Click the OK button to close the Execute Package Task Editor
+-- Click in the white space of the Parent.dtsx SSIS package’s Control Flow to make sure Parent.dtsx is selected
+-- Click in the white space of Precedence.dtsx’s Control Flow to make sure it is selected
+-- Press the F5 key to execute the Precedence.dtsx SSIS package in the BIDS debugger
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--Level 11 of the Stairway to Integration Services
+
+--More About SSIS Task Events
+
+--Open the Precedence.dtsx package. Your Control Flow should appear
+--In Step 9 of this series, we created OnError event handlers
+--execute the Precedence.dtsx SSIS package in the BIDS
+--Click the No button to raise an Error event from Script Task 4
